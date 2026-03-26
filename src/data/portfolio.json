@@ -1,0 +1,43 @@
+{
+  "meta": {
+    "name": "Your Name",
+    "title": "Full-Stack Software Engineer",
+    "tagline": "Building interactive experiences on the web"
+  },
+  "projects": [
+    {
+      "id": "project-alpha",
+      "title": "Project Alpha",
+      "description": "A real-time collaborative editor built with React, Node.js, and WebSockets.",
+      "technologies": ["React", "Node.js", "WebSockets", "PostgreSQL"],
+      "liveUrl": "https://example.com/alpha",
+      "repoUrl": "https://github.com/your-username/alpha"
+    },
+    {
+      "id": "project-beta",
+      "title": "Project Beta",
+      "description": "An AI-powered image classifier using Python, TensorFlow, and a custom REST API.",
+      "technologies": ["Python", "TensorFlow", "FastAPI", "Docker"],
+      "liveUrl": "https://example.com/beta",
+      "repoUrl": "https://github.com/your-username/beta"
+    },
+    {
+      "id": "project-gamma",
+      "title": "Project Gamma",
+      "description": "This pixel-art interactive portfolio, built with Phaser 3 and TypeScript.",
+      "technologies": ["TypeScript", "Phaser 3", "Vite", "Tiled"],
+      "repoUrl": "https://github.com/your-username/portfolio"
+    }
+  ],
+  "skills": [
+    { "category": "Languages", "items": ["TypeScript", "JavaScript", "Python", "Go", "SQL"] },
+    { "category": "Frontend", "items": ["React", "Next.js", "Vue", "Tailwind CSS", "Phaser"] },
+    { "category": "Backend", "items": ["Node.js", "Express", "FastAPI", "PostgreSQL", "Redis"] },
+    { "category": "Tools", "items": ["Git", "Docker", "AWS", "CI/CD", "Linux"] }
+  ],
+  "contact": {
+    "email": "hello@example.com",
+    "github": "https://github.com/your-username",
+    "linkedin": "https://linkedin.com/in/your-profile"
+  }
+}

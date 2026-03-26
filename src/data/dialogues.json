@@ -1,0 +1,44 @@
+{
+  "dialogues": {
+    "about-me": {
+      "id": "about-me",
+      "steps": [
+        { "text": "Welcome to my office!", "speaker": "Guide" },
+        { "text": "I'm a Full-Stack Software Engineer with a passion for building interactive web experiences.", "speaker": "Guide" },
+        { "text": "I studied Computer Science and have been coding for over 5 years.", "speaker": "Guide" },
+        { "text": "Feel free to explore the town to learn more about my work!" }
+      ]
+    },
+    "projects": {
+      "id": "projects",
+      "steps": [
+        { "text": "Welcome to the Workshop!", "speaker": "Guide" },
+        { "text": "This is where I build things. Let me show you some of my projects.", "speaker": "Guide" },
+        { "text": "Project Alpha — A real-time collaborative editor built with React, Node.js, and WebSockets." },
+        { "text": "Project Beta — An AI-powered image classifier using Python, TensorFlow, and a custom REST API." },
+        { "text": "Project Gamma — This very portfolio! A pixel-art game built with Phaser 3 and TypeScript." }
+      ]
+    },
+    "skills": {
+      "id": "skills",
+      "steps": [
+        { "text": "Ah, the Library! This is where I keep my knowledge.", "speaker": "Guide" },
+        { "text": "Languages: TypeScript, JavaScript, Python, Go, SQL" },
+        { "text": "Frontend: React, Next.js, Vue, Tailwind CSS, Phaser" },
+        { "text": "Backend: Node.js, Express, FastAPI, PostgreSQL, Redis" },
+        { "text": "Tools: Git, Docker, AWS, CI/CD, Linux" }
+      ]
+    },
+    "contact": {
+      "id": "contact",
+      "steps": [
+        { "text": "You found the Post Office!", "speaker": "Guide" },
+        { "text": "Want to get in touch? Here's how to reach me:" },
+        { "text": "Email: hello@example.com" },
+        { "text": "GitHub: github.com/your-username" },
+        { "text": "LinkedIn: linkedin.com/in/your-profile" },
+        { "text": "I'm always open to new opportunities and collaborations!" }
+      ]
+    }
+  }
+}

@@ -46,7 +46,7 @@ export class Player {
   }
 
   isInteracting(): boolean {
-    return Phaser.Input.Keyboard.JustDown(this.interactKey);
+    return this.inputEnabled && Phaser.Input.Keyboard.JustDown(this.interactKey);
   }
 
   update(): void {

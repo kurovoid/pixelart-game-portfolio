@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { SCENE_KEYS, EVENTS } from '../constants';
 import { EventBus } from '../systems/EventBus';
+import type { InteractionZone } from '../types/dialogue';
 
 export class UIScene extends Phaser.Scene {
   private interactPrompt!: Phaser.GameObjects.Text;
@@ -10,7 +11,7 @@ export class UIScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.interactPrompt = this.add.text(0, 0, 'Press E to interact', {
+    this.interactPrompt = this.add.text(0, 0, '', {
       fontSize: '12px',
       color: '#ffffff',
       backgroundColor: '#000000aa',
@@ -24,7 +25,8 @@ export class UIScene extends Phaser.Scene {
     EventBus.on(EVENTS.INTERACTION_LEFT, this.hidePrompt, this);
   }
 
-  private showPrompt(data: { screenX: number; screenY: number }): void {
+  private showPrompt(data: { screenX: number; screenY: number; zone: InteractionZone }): void {
+    this.interactPrompt.setText(`[E] ${data.zone.label}`);
     this.interactPrompt.setPosition(data.screenX, data.screenY - 10);
     this.interactPrompt.setVisible(true);
   }

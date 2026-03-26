@@ -2,19 +2,18 @@ import Phaser from 'phaser';
 import { SCENE_KEYS, MAP_SCALE, SCALED_TILE, EVENTS, INTERACTION_RADIUS } from '../constants';
 import { Player } from '../entities/Player';
 import { EventBus } from '../systems/EventBus';
-
-interface InteractionZone {
-  name: string;
-  type: string;
-  dialogueId: string;
-  label: string;
-  bounds: Phaser.Geom.Rectangle;
-}
+import { DialogueSystem } from '../systems/DialogueSystem';
+import { DialogueBox } from '../ui/DialogueBox';
+import type { InteractionZone } from '../types/dialogue';
 
 export class GameScene extends Phaser.Scene {
   private player!: Player;
   private interactionZones: InteractionZone[] = [];
   private activeZone: InteractionZone | null = null;
+  private dialogueSystem!: DialogueSystem;
+  private dialogueBox!: DialogueBox;
+  private dialogueActive = false;
+  private dialogueCooldown = 0;
 
   constructor() {
     super(SCENE_KEYS.GAME);
@@ -86,13 +85,51 @@ export class GameScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, mapWidthPx, mapHeightPx);
     this.player.sprite.setCollideWorldBounds(true);
 
+    // Initialize dialogue system
+    this.dialogueSystem = new DialogueSystem();
+    this.dialogueBox = new DialogueBox();
+
+    // Dialogue lifecycle: freeze/unfreeze player
+    EventBus.on(EVENTS.DIALOGUE_START, this.onDialogueStart, this);
+    EventBus.on(EVENTS.DIALOGUE_END, this.onDialogueEnd, this);
+
+    // Listen for advance input during dialogue (E or Space)
+    if (this.input.keyboard) {
+      this.input.keyboard.on('keydown-E', () => {
+        if (this.dialogueActive) this.dialogueSystem.advance();
+      });
+      this.input.keyboard.on('keydown-SPACE', () => {
+        if (this.dialogueActive) this.dialogueSystem.advance();
+      });
+    }
+
     // Launch UI scene on top
     this.scene.launch(SCENE_KEYS.UI);
   }
 
-  update(): void {
+  update(_time: number, delta: number): void {
     this.player.update();
-    this.checkInteractions();
+
+    if (this.dialogueCooldown > 0) {
+      this.dialogueCooldown -= delta;
+      return;
+    }
+
+    if (!this.dialogueActive) {
+      this.checkInteractions();
+    }
+  }
+
+  private onDialogueStart(): void {
+    this.dialogueActive = true;
+    this.player.setInputEnabled(false);
+    EventBus.emit(EVENTS.INTERACTION_LEFT); // hide prompt
+  }
+
+  private onDialogueEnd(): void {
+    this.dialogueActive = false;
+    this.dialogueCooldown = 300; // ms before player can re-interact
+    this.player.setInputEnabled(true);
   }
 
   private checkInteractions(): void {
@@ -103,12 +140,10 @@ export class GameScene extends Phaser.Scene {
     let closestDist = Infinity;
 
     for (const zone of this.interactionZones) {
-      // Distance from player to the edge of the zone bounds
       const cx = zone.bounds.centerX;
       const cy = zone.bounds.centerY;
       const dist = Phaser.Math.Distance.Between(px, py, cx, cy);
 
-      // Check if player is near the zone
       const expandedBounds = new Phaser.Geom.Rectangle(
         zone.bounds.x - INTERACTION_RADIUS,
         zone.bounds.y - INTERACTION_RADIUS,
@@ -124,7 +159,6 @@ export class GameScene extends Phaser.Scene {
 
     if (closestZone && closestZone !== this.activeZone) {
       this.activeZone = closestZone;
-      // Convert world position to screen position for the UI prompt
       EventBus.emit(EVENTS.INTERACTION_NEARBY, {
         screenX: this.cameras.main.width / 2,
         screenY: this.cameras.main.height / 2 - 40,
@@ -149,5 +183,12 @@ export class GameScene extends Phaser.Scene {
       }
     }
     return result;
+  }
+
+  shutdown(): void {
+    EventBus.off(EVENTS.DIALOGUE_START, this.onDialogueStart, this);
+    EventBus.off(EVENTS.DIALOGUE_END, this.onDialogueEnd, this);
+    this.dialogueSystem.destroy();
+    this.dialogueBox.destroy();
   }
 }
